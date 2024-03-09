@@ -7,7 +7,38 @@ jobs:
   get-secrets:
     runs-on: ubuntu-latest
     steps:
+      - name: Connect to Azure
+        uses: equinor/AzConnect@v1
+        with:
+          TenantID: ${{ vars.AZ_TENANT_ID }}
+          Subscription: ${{ vars.AZ_SUBSCRIPTION_ID }}
+          AppID: ${{ vars.AZ_CLIENT_ID }}
+          AppSecret: ${{ secrets.AZ_CLIENT_SECRET }}
+
       - name: Hello World
+        shell: pwsh
         run: |
-          echo "Hello World"
-  
+          $KeyVaultName = "github-keyvault-kv"
+          $SecretNamesList = "my-secret,another-secret,nonexisting-secret"
+
+          $SecretsDictionary = @{}
+          $SecretNamesList -split ',' | ForEach-Object {
+              
+              try {
+                  $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
+                  $SecretValueText = ConvertFrom-SecureString -SecureString $SecretValue.SecretValue -AsPlainText
+              }
+              catch {
+                  $SecretValueText = $null
+              }
+
+              if ($null -ne $SecretValueText)
+              {
+                  $SecretsDictionary.Add($_, $SecretValueText)
+              }
+          }
+
+          $SecretsDictionary.Keys | ForEach-Object {
+              $Msg = "{0} = {1}" -f $_, $SecretsDictionary[$_]
+              $Msg
+          }
