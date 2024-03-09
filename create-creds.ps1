@@ -1,8 +1,8 @@
 $Obj = @{
-    ClientSecret = "client-id"
-    SubscriptionId = "sub-id"
-    TenantId = "tenant-id"
-    ClientId = "client-id"
+    clientSecret = "client-id"
+    subscriptionId = "sub-id"
+    tenantId = "tenant-id"
+    clientId = "client-id"
 }
 
 $Obj | ConvertTo-Json

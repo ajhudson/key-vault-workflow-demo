@@ -11,10 +11,10 @@ jobs:
         shell: pwsh
         run: |
           $CredentialDetails = @{
-            ClientSecret = "${{ secrets.AZ_CLIENT_SECRET }}"
-            SubscriptionId = "${{ vars.AZ_SUBSCRIPTION_ID }}"
-            TenantId = "${{ vars.AZ_TENANT_ID }}"
-            ClientId = "${{ vars.AZ_CLIENT_ID }}"
+            clientSecret = "${{ secrets.AZ_CLIENT_SECRET }}"
+            subscriptionId = "${{ vars.AZ_SUBSCRIPTION_ID }}"
+            tenantId = "${{ vars.AZ_TENANT_ID }}"
+            clientId = "${{ vars.AZ_CLIENT_ID }}"
           }
 
           $CredentialsJson = $CredentialDetails | ConvertTo-Json
