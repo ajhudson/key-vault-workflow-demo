@@ -26,16 +26,8 @@ jobs:
               
               Write-Output "Key: $_"
 
-              try {
-                  $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
-                  $SecretValueText = ConvertFrom-SecureString -SecureString $SecretValue.SecretValue -AsPlainText
-
-                  Write-Output "Val: $SecretValueText"
-              }
-              catch {
-                  Write-Output "An error happened!"
-                  $SecretValueText = $null
-              }
+              $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
+              $SecretValueText = ConvertFrom-SecureString -SecureString $SecretValue.SecretValue -AsPlainText
 
               if ($null -ne $SecretValueText)
               {
