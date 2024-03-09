@@ -23,17 +23,10 @@ jobs:
           Write-Output $CredentialsJson >> $env:GITHUB_ENV
           Write-Output "EOF" >> $env:GITHUB_ENV
 
-      - name: Show Env Var
-        env:
-          CREDENTIALS: ${{ env.AZ_CREDENTIALS }}
-        run: |
-          echo $CREDENTIALS
-
       - name: Login via Az module
-        if: false
         uses: azure/login@v1
         with:
-          creds: ${{secrets.AZ_CREDENTIALS}}
+          creds: ${{ env.AZ_CREDENTIALS }}
           enable-AzPSSession: true
 
       - name: Get Key Vault Secrets
