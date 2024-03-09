@@ -33,6 +33,7 @@ jobs:
                   Write-Output "Val: $SecretValueText"
               }
               catch {
+                  Write-Output "An error happened!"
                   $SecretValueText = $null
               }
 
