@@ -1,0 +1,13 @@
+name: Get Secrets from Key Vault
+
+on:
+  workflow_dispatch:
+
+jobs:
+  get-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello World
+        run: |
+          echo "Hello World"
+  
