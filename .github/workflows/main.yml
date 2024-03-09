@@ -15,7 +15,7 @@ jobs:
           AppID: ${{ vars.AZ_CLIENT_ID }}
           AppSecret: ${{ secrets.AZ_CLIENT_SECRET }}
 
-      - name: Hello World
+      - name: Get Key Vault Secrets
         shell: pwsh
         run: |
           $KeyVaultName = "github-keyvault-kv"
@@ -40,5 +40,7 @@ jobs:
 
           $SecretsDictionary.Keys | ForEach-Object {
               $Msg = "{0} = {1}" -f $_, $SecretsDictionary[$_]
-              $Msg
+              Write-Output $Msg
           }
+
+          Write-Output "Finished"
