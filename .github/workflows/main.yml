@@ -24,6 +24,8 @@ jobs:
           $SecretsDictionary = @{}
           $SecretNamesList -split ',' | ForEach-Object {
               
+              Write-Output "Key: $_"
+
               try {
                   $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
                   $SecretValueText = ConvertFrom-SecureString -SecureString $SecretValue.SecretValue -AsPlainText
