@@ -29,6 +29,8 @@ jobs:
               try {
                   $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
                   $SecretValueText = ConvertFrom-SecureString -SecureString $SecretValue.SecretValue -AsPlainText
+
+                  Write-Output "Val: $SecretValueText"
               }
               catch {
                   $SecretValueText = $null
