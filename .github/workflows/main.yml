@@ -7,7 +7,30 @@ jobs:
   get-secrets:
     runs-on: ubuntu-latest
     steps:
+      - name: Create Credentials Object
+        shell: pwsh
+        run: |
+          $CredentialDetails = @{
+            ClientSecret = "${{ secrets.AZ_CLIENT_SECRET }}"
+            SubscriptionId = "${{ vars.AZ_SUBSCRIPTION_ID }}"
+            TenantId = "${{ vars.AZ_TENANT_ID }}"
+            ClientId = "${{ vars.AZ_CLIENT_ID }}"
+          }
+
+          $CredentialsJson = $CredentialDetails | ConvertTo-Json
+
+          Write-Output "AZ_CREDENTIALS<<EOF" >> $env:GITHUB_ENV
+          Write-Output $CredentialsJson >> $env:GITHUB_ENV
+          Write-Output "EOF" >> $env:GITHUB_ENV
+
+      - name: Show Env Var
+        env:
+          CREDENTIALS: ${{ env.AZ_CREDENTIALS }}
+        run: |
+          echo $CREDENTIALS
+
       - name: Login via Az module
+        if: false
         uses: azure/login@v1
         with:
           creds: ${{secrets.AZ_CREDENTIALS}}
