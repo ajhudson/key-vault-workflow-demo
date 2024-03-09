@@ -7,15 +7,14 @@ jobs:
   get-secrets:
     runs-on: ubuntu-latest
     steps:
-      - name: Connect to Azure
-        uses: equinor/AzConnect@v1
+      - name: Login via Az module
+        uses: azure/login@v1
         with:
-          TenantID: ${{ vars.AZ_TENANT_ID }}
-          Subscription: ${{ vars.AZ_SUBSCRIPTION_ID }}
-          AppID: ${{ vars.AZ_CLIENT_ID }}
-          AppSecret: ${{ secrets.AZ_CLIENT_SECRET }}
+          creds: ${{secrets.AZ_CREDENTIALS}}
+          enable-AzPSSession: true
 
       - name: Get Key Vault Secrets
+        if: false
         shell: pwsh
         run: |
           $KeyVaultName = "github-keyvault-kv"
