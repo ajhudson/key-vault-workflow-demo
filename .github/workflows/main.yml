@@ -49,7 +49,7 @@ jobs:
               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
               #$SecretValueText = SecretValue.SecretValue | ConvertFrom-SecureString -SecureString -AsPlainText
 
-              $SecretValue.SecretValueText
+              Write-Output "Value: $SecretValue.SecretValueText"
 
               <#
               if ($null -ne $SecretValueText)
