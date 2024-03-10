@@ -47,7 +47,7 @@ jobs:
 
               
               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
-              $SecretValueText = ConvertFrom-SecureString -SecureString $SecretValue -AsPlainText
+              $SecretValueText = SecretValue.SecretValue | ConvertFrom-SecureString -SecureString -AsPlainText
 
               $SecretValueText
 
