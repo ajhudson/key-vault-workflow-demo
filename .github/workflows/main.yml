@@ -5,7 +5,7 @@ on:
 
 jobs:
   get-secrets:
-    uses: ./github/workflows/read-key-vault.yml
+    uses: ./.github/workflows/read-key-vault.yml
     with:
       key-vault-name: github-keyvault-kv
       secrets-list: my-secret,another-secret,nonexisting-secret
