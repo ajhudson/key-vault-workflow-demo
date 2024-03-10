@@ -40,6 +40,10 @@ jobs:
           $KeyVaultName = "github-keyvault-kv"
           $SecretNamesList = "my-secret,another-secret,nonexisting-secret"
 
+          $SecretNamesList
+
+          exit
+
           $SecretsDictionary = @{}
           $SecretNamesList -split ',' | ForEach-Object {
               
