@@ -36,24 +36,23 @@ jobs:
 
       - name: Get Key Vault Secrets
         shell: pwsh
+        id: kv-secrets
         run: |
           $KeyVaultName = "github-keyvault-kv"
           $SecretNamesList = "my-secret,another-secret,nonexisting-secret"
 
-          $SecretsDictionary = @{}
           $SecretNamesList -split ',' | ForEach-Object {
               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_ -AsPlainText
               $SecretValue
 
               if ($null -ne $SecretValueText)
               {
-                  $SecretsDictionary.Add($_, $SecretValueText)
+                  Write-Output "$_=$SecretValue" | Out-File $env:GITHUB_OUTPUT -Append
               }
           }
 
-          $SecretsDictionary.Keys | ForEach-Object {
-              $Msg = "{0} = {1}" -f $_, $SecretsDictionary[$_]
-              Write-Output $Msg
-          }
-
-          Write-Output "Finished"
+      - name: Show Secrets
+        shell: pwsh
+        run: |
+          Write-Output "my-secret: ${{ steps.kv-secrets.outputs.my-secret }}"
+          Write-Output "another-secret: ${{ steps.kv-secrets.outputs.another-secret }}"
