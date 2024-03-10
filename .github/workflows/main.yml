@@ -29,6 +29,11 @@ jobs:
           creds: ${{ env.AZ_CREDENTIALS }}
           enable-AzPSSession: true
 
+      - name: Install PS AZ Module
+        shell: pwsh
+        run: |
+          Install-Module -Name Az -Repository PSGallery -Force
+
       - name: Get Key Vault Secrets
         shell: pwsh
         run: |
