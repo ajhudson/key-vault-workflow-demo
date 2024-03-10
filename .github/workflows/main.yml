@@ -30,9 +30,15 @@ jobs:
           enable-AzPSSession: true
 
       - name: Install PS AZ Module
+        if: false
         shell: pwsh
         run: |
           Install-Module -Name Az -Repository PSGallery -Force
+
+      - name: Install and cache PowerShell modules
+        uses: potatoqualitee/psmodulecache@v6.0
+        with:
+          modules-to-cache: Az
 
       - name: Get Key Vault Secrets
         shell: pwsh
@@ -45,7 +51,7 @@ jobs:
               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_ -AsPlainText
               $SecretValue
 
-              if ($null -ne $SecretValueText)
+              if ($null -ne $SecretValue)
               {
                   Write-Output "$_=$SecretValue" | Out-File $env:GITHUB_OUTPUT -Append
               }
