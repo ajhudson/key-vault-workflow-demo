@@ -40,7 +40,7 @@ jobs:
           $KeyVaultName = "github-keyvault-kv"
           $SecretNamesList = "my-secret,another-secret,nonexisting-secret"
 
-          $SecretNamesList
+          $SecretNamesList -split ','
 
           exit
 
