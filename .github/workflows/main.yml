@@ -53,7 +53,8 @@ jobs:
 
               if ($null -ne $SecretValue)
               {
-                  Write-Output "$_=$SecretValue" | Out-File $env:GITHUB_OUTPUT -Append
+                  Write-Output "::add-mask::$SecretValue"
+                  Write-Output "$_=$SecretValue" >> $env:GITHUB_OUTPUT
               }
           }
 
