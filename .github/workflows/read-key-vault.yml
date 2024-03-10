@@ -60,3 +60,5 @@ jobs:
                   Write-Output "$_=$SecretValue" >> $env:GITHUB_ENV
               }
           }
+
+          Write-Output "MY_MSG=Charnock incredible everywhere they go" >> $env:GITHUB_ENV

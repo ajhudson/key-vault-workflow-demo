@@ -20,6 +20,7 @@ jobs:
         env:
           MY_SECRET: ${{ env.my-secret }}
           ANOTHER_SECRET: ${{ env.another-secret }}
+          MSG: ${{ env.MY_MSG }}
         run: |
           echo "my-secret: $MY_SECRET"
           echo "another-secret: $ANOTHER_SECRET"
