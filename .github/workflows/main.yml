@@ -40,15 +40,12 @@ jobs:
           $KeyVaultName = "github-keyvault-kv"
           $SecretNamesList = "my-secret,another-secret,nonexisting-secret"
 
-          $SecretNamesList -split ','
-
-          exit
-
           $SecretsDictionary = @{}
           $SecretNamesList -split ',' | ForEach-Object {
               
               Write-Output "Key: $_"
 
+              <#
               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
               $SecretValueText = ConvertFrom-SecureString -SecureString $SecretValue.SecretValue -AsPlainText
 
@@ -56,11 +53,14 @@ jobs:
               {
                   $SecretsDictionary.Add($_, $SecretValueText)
               }
+              #>
           }
 
+          <#
           $SecretsDictionary.Keys | ForEach-Object {
               $Msg = "{0} = {1}" -f $_, $SecretsDictionary[$_]
               Write-Output $Msg
           }
+          #>
 
           Write-Output "Finished"
