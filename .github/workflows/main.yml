@@ -46,10 +46,10 @@ jobs:
               Write-Output "Key: $_"
 
               
-              $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
+              $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_ -AsPlainText
               #$SecretValueText = SecretValue.SecretValue | ConvertFrom-SecureString -SecureString -AsPlainText
 
-              Write-Output "Value: $SecretValue.SecretValueText"
+              Write-Output "Value: $SecretValue"
 
               <#
               if ($null -ne $SecretValueText)
