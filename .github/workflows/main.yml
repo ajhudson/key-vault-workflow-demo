@@ -42,28 +42,17 @@ jobs:
 
           $SecretsDictionary = @{}
           $SecretNamesList -split ',' | ForEach-Object {
-              
-              Write-Output "Key: $_"
-
-              
               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_ -AsPlainText
-              #$SecretValueText = SecretValue.SecretValue | ConvertFrom-SecureString -SecureString -AsPlainText
 
-              Write-Output "Value: $SecretValue"
-
-              <#
               if ($null -ne $SecretValueText)
               {
                   $SecretsDictionary.Add($_, $SecretValueText)
               }
-              #>
           }
 
-          <#
           $SecretsDictionary.Keys | ForEach-Object {
               $Msg = "{0} = {1}" -f $_, $SecretsDictionary[$_]
               Write-Output $Msg
           }
-          #>
 
           Write-Output "Finished"
