@@ -5,61 +5,63 @@ on:
 
 jobs:
   get-secrets:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create Credentials Object
-        shell: pwsh
-        run: |
-          $CredentialDetails = @{
-            clientSecret = "${{ secrets.AZ_CLIENT_SECRET }}"
-            subscriptionId = "${{ vars.AZ_SUBSCRIPTION_ID }}"
-            tenantId = "${{ vars.AZ_TENANT_ID }}"
-            clientId = "${{ vars.AZ_CLIENT_ID }}"
-          }
+    uses: ./github/workflows/read-key-vault.yml
+    with:
+      key-vault-name: github-keyvault-kv
+      secrets-list: my-secret,another-secret,nonexisting-secret
+    secrets:
+      azure-client-secret: ${{ secrets.AZ_CLIENT_SECRET }}
+# jobs:
+#   get-secrets:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Create Credentials Object
+#         shell: pwsh
+#         run: |
+#           $CredentialDetails = @{
+#             clientSecret = "${{ secrets.AZ_CLIENT_SECRET }}"
+#             subscriptionId = "${{ vars.AZ_SUBSCRIPTION_ID }}"
+#             tenantId = "${{ vars.AZ_TENANT_ID }}"
+#             clientId = "${{ vars.AZ_CLIENT_ID }}"
+#           }
 
-          $CredentialsJson = $CredentialDetails | ConvertTo-Json
+#           $CredentialsJson = $CredentialDetails | ConvertTo-Json
 
-          Write-Output "AZ_CREDENTIALS<<EOF" >> $env:GITHUB_ENV
-          Write-Output $CredentialsJson >> $env:GITHUB_ENV
-          Write-Output "EOF" >> $env:GITHUB_ENV
+#           Write-Output "AZ_CREDENTIALS<<EOF" >> $env:GITHUB_ENV
+#           Write-Output $CredentialsJson >> $env:GITHUB_ENV
+#           Write-Output "EOF" >> $env:GITHUB_ENV
 
-      - name: Login via Az module
-        uses: azure/login@v1
-        with:
-          creds: ${{ env.AZ_CREDENTIALS }}
-          enable-AzPSSession: true
+#       - name: Login via Az module
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{ env.AZ_CREDENTIALS }}
+#           enable-AzPSSession: true
 
-      - name: Install PS AZ Module
-        if: false
-        shell: pwsh
-        run: |
-          Install-Module -Name Az -Repository PSGallery -Force
+#       - name: Install and cache PowerShell modules
+#         uses: potatoqualitee/psmodulecache@v6.0
+#         with:
+#           modules-to-cache: Az
 
-      - name: Install and cache PowerShell modules
-        uses: potatoqualitee/psmodulecache@v6.0
-        with:
-          modules-to-cache: Az
+#       - name: Get Key Vault Secrets
+#         shell: pwsh
+#         id: kv-secrets
+#         run: |
+#           $KeyVaultName = "github-keyvault-kv"
+#           $SecretNamesList = "my-secret,another-secret,nonexisting-secret"
 
-      - name: Get Key Vault Secrets
-        shell: pwsh
-        id: kv-secrets
-        run: |
-          $KeyVaultName = "github-keyvault-kv"
-          $SecretNamesList = "my-secret,another-secret,nonexisting-secret"
+#           $SecretNamesList -split ',' | ForEach-Object {
+#               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_ -AsPlainText
+#               $SecretValue
 
-          $SecretNamesList -split ',' | ForEach-Object {
-              $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_ -AsPlainText
-              $SecretValue
+#               if ($null -ne $SecretValue)
+#               {
+#                   Write-Output "::add-mask::$SecretValue"
+#                   Write-Output "$_=$SecretValue" >> $env:GITHUB_OUTPUT
+#               }
+#           }
 
-              if ($null -ne $SecretValue)
-              {
-                  Write-Output "::add-mask::$SecretValue"
-                  Write-Output "$_=$SecretValue" >> $env:GITHUB_OUTPUT
-              }
-          }
-
-      - name: Show Secrets
-        shell: pwsh
-        run: |
-          Write-Output "my-secret: ${{ steps.kv-secrets.outputs.my-secret }}"
-          Write-Output "another-secret: ${{ steps.kv-secrets.outputs.another-secret }}"
+#       - name: Show Secrets
+#         shell: pwsh
+#         run: |
+#           Write-Output "my-secret: ${{ steps.kv-secrets.outputs.my-secret }}"
+#           Write-Output "another-secret: ${{ steps.kv-secrets.outputs.another-secret }}"

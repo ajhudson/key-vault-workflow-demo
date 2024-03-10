@@ -1,0 +1,63 @@
+name: Read Key Vault Secrets
+
+on:
+  workflow_call:
+    inputs:
+      key-vault-name:
+        type: string
+        required: true
+      secrets-list:
+        type: string
+        required: true
+    secrets:
+      azure-client-secret:
+        required: true
+
+jobs:
+  read-key-vault-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Credentials Object
+        shell: pwsh
+        run: |
+          $CredentialDetails = @{
+            clientSecret = "${{ secrets.azure-client-secret }}"
+            subscriptionId = "${{ vars.AZ_SUBSCRIPTION_ID }}"
+            tenantId = "${{ vars.AZ_TENANT_ID }}"
+            clientId = "${{ vars.AZ_CLIENT_ID }}"
+          }
+
+          $CredentialsJson = $CredentialDetails | ConvertTo-Json
+
+          Write-Output "AZ_CREDENTIALS<<EOF" >> $env:GITHUB_ENV
+          Write-Output $CredentialsJson >> $env:GITHUB_ENV
+          Write-Output "EOF" >> $env:GITHUB_ENV
+
+      - name: Login via Az module
+        uses: azure/login@v1
+        with:
+          creds: ${{ env.AZ_CREDENTIALS }}
+          enable-AzPSSession: true
+
+      - name: Install and cache PowerShell modules
+        uses: potatoqualitee/psmodulecache@v6.0
+        with:
+          modules-to-cache: Az
+
+      - name: Get Key Vault Secrets
+        shell: pwsh
+        id: kv-secrets
+        run: |
+          $KeyVaultName = "${{ inputs.key-vault-name }}"
+          $SecretNamesList = "${{ inputs.secrets-list }}"
+
+          $SecretNamesList -split ',' | ForEach-Object {
+              $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_ -AsPlainText
+              $SecretValue
+
+              if ($null -ne $SecretValue)
+              {
+                  Write-Output "::add-mask::$SecretValue"
+                  Write-Output "$_=$SecretValue" >> $env:GITHUB_ENV
+              }
+          }
