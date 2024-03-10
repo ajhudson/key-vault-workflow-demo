@@ -45,10 +45,13 @@ jobs:
               
               Write-Output "Key: $_"
 
-              <#
+              
               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_
+              $SecretValue
+              <#
               $SecretValueText = ConvertFrom-SecureString -SecureString $SecretValue.SecretValue -AsPlainText
 
+              
               if ($null -ne $SecretValueText)
               {
                   $SecretsDictionary.Add($_, $SecretValueText)
