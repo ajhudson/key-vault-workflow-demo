@@ -53,7 +53,6 @@ jobs:
 
           $SecretNamesList -split ',' | ForEach-Object {
               $SecretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $_ -AsPlainText
-              $SecretValue
 
               if ($null -ne $SecretValue)
               {

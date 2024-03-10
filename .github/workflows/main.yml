@@ -11,6 +11,19 @@ jobs:
       secrets-list: my-secret,another-secret,nonexisting-secret
     secrets:
       azure-client-secret: ${{ secrets.AZ_CLIENT_SECRET }}
+
+  show-redacted-secrets:
+    needs: get-secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: List Redacted Secrets
+        env:
+          MY_SECRET: ${{ env.my-secret }}
+          ANOTHER_SECRET: ${{ env.another-secret }}
+        run: |
+          echo "my-secret: $MY_SECRET"
+          echo "another-secret: $ANOTHER_SECRET"
+
 # jobs:
 #   get-secrets:
 #     runs-on: ubuntu-latest
