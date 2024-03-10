@@ -30,7 +30,6 @@ jobs:
           enable-AzPSSession: true
 
       - name: Get Key Vault Secrets
-        if: false
         shell: pwsh
         run: |
           $KeyVaultName = "github-keyvault-kv"
